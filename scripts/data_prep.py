@@ -20,13 +20,15 @@ def clean_dataset(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def preprocess_dataset(
-    orig_df: pd.DataFrame, test_size: float
+    orig_df: pd.DataFrame, test_size: float, random_state: int = 42
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
     logging.info("Cleaning data...")
     clean_df = clean_dataset(orig_df)
 
     logging.info("Train/test splitting data...")
-    train_df, test_df = train_test_split(clean_df, test_size=test_size, random_state=42)
+    train_df, test_df = train_test_split(
+        clean_df, test_size=test_size, random_state=random_state
+    )
 
     return train_df, test_df
 
