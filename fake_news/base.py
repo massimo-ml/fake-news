@@ -15,6 +15,14 @@ class AbstractNewsClassifier(ABC):
     def predict(self, x: np.ndarray) -> np.ndarray:
         pass
 
+    @abstractmethod
+    def save_model(self, file_path: str) -> None:
+        pass
+    
+    @abstractmethod
+    def load_model(self, file_path: str) -> None:
+        pass
+
 
 class AbstractNewsGenerator(ABC):
     @abstractmethod
