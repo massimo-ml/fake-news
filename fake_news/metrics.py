@@ -1,5 +1,5 @@
 import numpy as np
-from sklearn.metrics import (
+from sklearn.metrics import (  # type: ignore
     accuracy_score,
     f1_score,
     roc_auc_score,
@@ -10,9 +10,8 @@ METRIC = Literal["acc", "accuracy", "auc", "f1"]
 
 
 def calculate_metrics(
-    y_true: np.ndarray, y_pred: np.npdarray, *, metrics: list[METRIC]
-) -> dict[str, float]:
-
+    y_true: np.ndarray, y_pred: np.ndarray, *, metrics: list[METRIC]
+) -> dict[METRIC, float]:
     res: dict[METRIC, float] = {}
     for metric in metrics:
         match metric:
