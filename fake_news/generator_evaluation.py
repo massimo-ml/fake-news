@@ -6,7 +6,7 @@ from typing import Any
 
 import fake_news.base as base
 
-from scripts.data_preprocessing import DataPreprocessingBeforeClassifiers
+from fake_news.data_preprocessing import DataPreprocessingBeforeClassifiers
 
 
 def _preprocessArticle(

@@ -111,7 +111,7 @@ class DataPreprocessingBeforeClassifiers:
 
     def transform_ml(
         self, text: str
-    ) -> np.array:  # Use this for inference of single examples
+    ) -> np.ndarray:  # Use this for inference of single examples
         assert self.ml_vectorizer is not None, "fit_tokenizers() should be called first"
         tokenized = self._tokenize_lemmatize_text(text)
         transformed = self.ml_vectorizer.transform(tokenized)
@@ -119,7 +119,7 @@ class DataPreprocessingBeforeClassifiers:
 
     def transform_dl(
         self, text: str
-    ) -> np.array:  # Use this for inference of single examples
+    ) -> np.ndarray:  # Use this for inference of single examples
         assert self.dl_vectorizer is not None, "fit_tokenizers() should be called first"
         tokenized = self._tokenize_lemmatize_text(text)
         transformed = self.dl_vectorizer.texts_to_sequences(tokenized)
