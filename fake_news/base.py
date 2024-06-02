@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
+from typing import Any
 
 import numpy as np
+from transformers import GenerationConfig  # type: ignore
 
 
 class AbstractNewsClassifier(ABC):
@@ -25,16 +27,8 @@ class AbstractNewsClassifier(ABC):
 
 
 class AbstractNewsGenerator(ABC):
-    def __init__(self, **genParams):
-        self._generationParams = genParams
-
     @abstractmethod
-    def generate(self, title: str) -> str:
+    def generate(
+        self, title: str, generation_config: GenerationConfig | dict[str, Any]
+    ) -> str:
         pass
-
-    def setGenerationParameter(self, paramName: str, value):
-        """
-        Value can be of any type, so I'm not adding a hint
-        """
-        if paramName in self._generationParams:
-            self._generationParams[paramName] = value
