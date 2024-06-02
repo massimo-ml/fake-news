@@ -29,6 +29,8 @@ class AbstractNewsClassifier(ABC):
 class AbstractNewsGenerator(ABC):
     @abstractmethod
     def generate(
-        self, title: str, generation_config: GenerationConfig | dict[str, Any]
+        self,
+        title: str,
+        generation_config: GenerationConfig | dict[str, Any] | None = None,
     ) -> str:
         pass

@@ -6,3 +6,6 @@ jupyter
 nltk
 tensorflow
 transformers
+sentencepiece
+--index-url https://download.pytorch.org/whl/cu118
+torch
