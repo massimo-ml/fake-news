@@ -25,6 +25,19 @@ class AbstractNewsClassifier(ABC):
 
 
 class AbstractNewsGenerator(ABC):
+    def __init__(self, **genParams):
+        self._generationParams = genParams
+
     @abstractmethod
     def generate(self, title: str) -> str:
         pass
+
+    def setGenerationParameter(self, paramName: str, value):
+        """
+        Value can be of any type, so I'm not adding a hint 
+        """
+        if paramName in self._generationParams:
+            self._generationParams[paramName] = value
+    
+
+

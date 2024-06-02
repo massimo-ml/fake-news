@@ -2,6 +2,11 @@ import numpy as np
 from sklearn.svm import SVC
 import joblib
 
+import sys
+sys.path.append('..')
+
+from fake_news.base import AbstractNewsClassifier
+
 
 class SupportVectorMachineClassifier(AbstractNewsClassifier):
     def __init__(self, *, metrics: list[str]):

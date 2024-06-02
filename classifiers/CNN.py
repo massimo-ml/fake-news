@@ -2,6 +2,11 @@ import numpy as np
 from tensorflow.keras.models import Sequential, load_model
 from tensorflow.keras.layers import Embedding, Conv1D, MaxPooling1D, Flatten, Dense
 
+import sys
+sys.path.append('..')
+
+from fake_news.base import AbstractNewsClassifier
+
 
 class ConvolutionalNeuralNetworkClassifier(AbstractNewsClassifier):
     def __init__(self, *, metrics: list[str]):
