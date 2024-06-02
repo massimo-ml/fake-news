@@ -8,7 +8,9 @@ from nltk.corpus import stopwords  # type: ignore
 from nltk.stem import WordNetLemmatizer  # type: ignore
 from sklearn.feature_extraction.text import TfidfVectorizer  # type: ignore
 from tensorflow.keras.preprocessing.text import Tokenizer  # type: ignore
-from tensorflow.keras.preprocessing.sequence import pad_sequences  # type: ignore
+from tensorflow.keras.preprocessing.sequence import (  # type: ignore
+    pad_sequences,
+)
 
 
 class DataPreprocessingBeforeClassifiers:
@@ -82,13 +84,17 @@ class DataPreprocessingBeforeClassifiers:
         self.dl_vectorizer = Tokenizer(num_words=10000)
         self.dl_vectorizer.fit_on_texts(self.X_train)
 
-    def save_tokenizers(self, ml_vectorizer_path: str, dl_vectorizer_path: str):
+    def save_tokenizers(
+        self, ml_vectorizer_path: str, dl_vectorizer_path: str
+    ):
         with open(ml_vectorizer_path, "wb") as f:
             pickle.dump(self.ml_vectorizer, f)
         with open(dl_vectorizer_path, "wb") as f:
             pickle.dump(self.dl_vectorizer, f)
 
-    def load_tokenizers(self, ml_vectorizer_path: str, dl_vectorizer_path: str):
+    def load_tokenizers(
+        self, ml_vectorizer_path: str, dl_vectorizer_path: str
+    ):
         with open(ml_vectorizer_path, "rb") as f:
             self.ml_vectorizer = pickle.load(f)
         with open(dl_vectorizer_path, "rb") as f:
@@ -99,7 +105,9 @@ class DataPreprocessingBeforeClassifiers:
         text = re.sub(
             r"http\S+|www\S+|https\S+", "", text, flags=re.MULTILINE
         )  # Remove URLs
-        text = re.sub(r"[^A-Za-z\s]", "", text)  # Remove special characters and numbers
+        text = re.sub(
+            r"[^A-Za-z\s]", "", text
+        )  # Remove special characters and numbers
         text = text.lower()  # Convert to lowercase
         return text
 
@@ -112,7 +120,9 @@ class DataPreprocessingBeforeClassifiers:
     def transform_ml(
         self, text: str
     ) -> np.ndarray:  # Use this for inference of single examples
-        assert self.ml_vectorizer is not None, "fit_tokenizers() should be called first"
+        assert (
+            self.ml_vectorizer is not None
+        ), "fit_tokenizers() should be called first"
         tokenized = self._tokenize_lemmatize_text(text)
         transformed = self.ml_vectorizer.transform(tokenized)
         return transformed
@@ -120,7 +130,9 @@ class DataPreprocessingBeforeClassifiers:
     def transform_dl(
         self, text: str
     ) -> np.ndarray:  # Use this for inference of single examples
-        assert self.dl_vectorizer is not None, "fit_tokenizers() should be called first"
+        assert (
+            self.dl_vectorizer is not None
+        ), "fit_tokenizers() should be called first"
         tokenized = self._tokenize_lemmatize_text(text)
         transformed = self.dl_vectorizer.texts_to_sequences(tokenized)
         padded = pad_sequences(transformed, maxlen=self.dl_seq_maxlen)

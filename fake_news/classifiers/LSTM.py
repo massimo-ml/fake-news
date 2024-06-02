@@ -2,10 +2,6 @@ import numpy as np
 from tensorflow.keras.models import Sequential, load_model  # type: ignore
 from tensorflow.keras.layers import Embedding, Dense, LSTM  # type: ignore
 
-import sys
-
-sys.path.append("..")
-
 from fake_news.base import AbstractNewsClassifier
 
 
@@ -13,7 +9,9 @@ class LSTMClassifier(AbstractNewsClassifier):
     def __init__(self, *, metrics: list[str]):
         super().__init__(metrics=metrics)
         self.model = Sequential()
-        self.model.add(Embedding(input_dim=10000, output_dim=128, input_length=500))
+        self.model.add(
+            Embedding(input_dim=10000, output_dim=128, input_length=500)
+        )
         self.model.add(LSTM(128))
         self.model.add(Dense(10, activation="relu"))
         self.model.add(Dense(1, activation="sigmoid"))

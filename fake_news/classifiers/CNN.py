@@ -1,10 +1,12 @@
 import numpy as np
 from tensorflow.keras.models import Sequential, load_model  # type: ignore
-from tensorflow.keras.layers import Embedding, Conv1D, MaxPooling1D, Flatten, Dense  # type: ignore
-
-import sys
-
-sys.path.append("..")
+from tensorflow.keras.layers import (  # type: ignore
+    Embedding,
+    Conv1D,
+    MaxPooling1D,
+    Flatten,
+    Dense,
+)
 
 from fake_news.base import AbstractNewsClassifier
 
@@ -13,7 +15,9 @@ class ConvolutionalNeuralNetworkClassifier(AbstractNewsClassifier):
     def __init__(self, *, metrics: list[str]):
         super().__init__(metrics=metrics)
         self.model = Sequential()
-        self.model.add(Embedding(input_dim=10000, output_dim=128, input_length=500))
+        self.model.add(
+            Embedding(input_dim=10000, output_dim=128, input_length=500)
+        )
         self.model.add(Conv1D(128, 5, activation="relu"))
         self.model.add(MaxPooling1D(pool_size=2))
         self.model.add(Flatten())

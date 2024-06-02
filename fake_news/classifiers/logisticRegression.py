@@ -2,10 +2,6 @@ import numpy as np
 from sklearn.linear_model import LogisticRegression  # type: ignore
 import joblib  # type: ignore
 
-import sys
-
-sys.path.append("..")
-
 from fake_news.base import AbstractNewsClassifier
 
 
