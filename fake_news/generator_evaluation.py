@@ -13,7 +13,8 @@ def _preprocessArticle(
     article: str, preprocessor: DataPreprocessingBeforeClassifiers, type: str
 ) -> np.ndarray:
     """
-    Embeds the generated article into a numpy array to make it compatible with classifiers
+    Embeds the generated article into a numpy array to make it
+    compatible with classifiers
     """
     if type == "ml":
         return preprocessor.transform_ml(article)
@@ -39,23 +40,34 @@ def evaluateGenerator(
     Parameters
     ========
     generator: base.AbstractNewsGenerator - Fake news generator
-    classifiers: dict[str, Tuple[base.AbstractNewsClassifier, str]] - A dict of tuples to evaluate the generator with, the key is the name of the classifier.
-    The tuple contains two values - the first one is a classifier, the second one is the type of classifier ('dl' for neural network classifiers, 'ml' for everything else)
+    classifiers: dict[str, Tuple[base.AbstractNewsClassifier, str]] -
+        A dict of tuples to evaluate the generator with,
+        the key is the name of the classifier.
+        The tuple contains two values - the first one is a classifier,
+        the second one is the type of classifier
+        ('dl' for neural network classifiers, 'ml' for everything else)
     testTitles: list[str] - A list of titles to pass to the generator
-    paramValues: dict[str, Any] - A dictionary with possible generation parameters for the generator model
-    dataPreprocessor: DataPreprocessingBeforeClassifiers - A DataPreprocessingBeforeClassifiers object with trained/loaded tokenizers
+    paramValues: dict[str, Any] - A dictionary with possible generation
+        parameters for the generator model
+    dataPreprocessor: DataPreprocessingBeforeClassifiers -
+        A DataPreprocessingBeforeClassifiers object
+        with trained/loaded tokenizers
 
     Output
     ========
-    A df.DataFrame with the "accuracy" of generation (that is, the percentage of generated articles classified as fake news by each classfier)
+    A df.DataFrame with the "accuracy" of generation (that is, the percentage
+    of generated articles classified as fake news by each classfier)
 
     """
     res: dict[str, list] = {
-        colName: [] for colName in [p for p in paramValues] + [c for c in classifiers]
+        colName: []
+        for colName in [p for p in paramValues] + [c for c in classifiers]
     }  # Params used as indices
     paramsCombinations = [
         {paramName: comb[i] for i, paramName in enumerate(paramValues)}
-        for comb in list(itertools.product(*[paramValues[i] for i in paramValues]))
+        for comb in list(
+            itertools.product(*[paramValues[i] for i in paramValues])
+        )
     ]  # Generate all possible generation parameters combinations
 
     for paramCombination in paramsCombinations:
@@ -72,7 +84,9 @@ def evaluateGenerator(
             for classifierName in classifiers:
                 classification = classifiers[classifierName][0].predict(
                     _preprocessArticle(
-                        article, dataPreprocessor, classifiers[classifierName][1]
+                        article,
+                        dataPreprocessor,
+                        classifiers[classifierName][1],
                     )
                 )
                 if classification[0] == 1:
@@ -101,9 +115,13 @@ def evaluateGenerator(
 #    "classifiers/tokenizers/dl_tokenizer.pickle",
 # )
 # df = evaluateGenerator(
-#    DummyGenerator(),
-#    {"mb_classifier": (mbCl, "ml"), "rf_classifier": (rdFor, "ml"), 'cnn': (cnnM, 'dl')},
-#    ["title1", "title2", "title3"],
-#    {"temp": [0, 1, 2, 3, 4]},
-#    dp,
+#     DummyGenerator(),
+#     {
+#         "mb_classifier": (mbCl, "ml"),
+#         "rf_classifier": (rdFor, "ml"),
+#         "cnn": (cnnM, "dl"),
+#     },
+#     ["title1", "title2", "title3"],
+#     {"temp": [0, 1, 2, 3, 4]},
+#     dp,
 # )

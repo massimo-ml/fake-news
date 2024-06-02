@@ -46,7 +46,10 @@ if __name__ == "__main__":
         "--test_size",
         type=float,
         default=0.2,
-        help="Number in range (0, 1) denoting proportion of dataset to leave for test",
+        help=(
+            "Number in range (0, 1) denoting "
+            "proportion of dataset to leave for test"
+        ),
     )
     parsed = parser.parse_args()
 
@@ -54,7 +57,9 @@ if __name__ == "__main__":
     logging.info("Reading original data from directory...")
     orig_df = pd.read_csv(data_dir / "WELFake_Dataset.csv", index_col=0)
 
-    train_df, test_df = preprocess_dataset(orig_df=orig_df, test_size=parsed.test_size)
+    train_df, test_df = preprocess_dataset(
+        orig_df=orig_df, test_size=parsed.test_size
+    )
 
     logging.info("Persisting resulting dataframes...")
     train_df.to_csv(data_dir / "WELFake_clean_train.csv", index=True)
