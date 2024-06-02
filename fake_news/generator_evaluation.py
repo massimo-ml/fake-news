@@ -2,38 +2,36 @@ import itertools
 import pandas as pd
 import numpy as np
 
-from typing import List, Dict
+from typing import List, Dict, Tuple
 
 import base
-import metrics
 
+import sys
 
-class DummyGenerator(base.AbstractNewsGenerator):
-    def generate(self, title: str) -> str:
-        super().generate(title)
-        return "hahaha"
+sys.path.append(".")
 
+from scripts.data_preprocessing import DataPreprocessingBeforeClassifiers
 
-class DummyClassifier(base.AbstractNewsClassifier):
-    def predict(self, x: np.ndarray) -> np.ndarray:
-        return True
-
-    def fit(self, x: np.ndarray, y: np.ndarray):
-        return super().fit(x, y)
-
-
-def _preprocessArticle(article: str) -> np.array:
+def _preprocessArticle(
+    article: str, preprocessor: DataPreprocessingBeforeClassifiers, type: str
+) -> np.array:
     """
     Embeds the generated article into a numpy array to make it compatible with classifiers
     """
-    return np.zeros(1)  # Placeholder
+    if type == "ml":
+        return preprocessor.transform_ml(article)
+    elif type == "dl":
+        return preprocessor.transform_dl(article)
+    else:
+        return None
 
 
 def evaluateGenerator(
     generator: base.AbstractNewsGenerator,
-    classifiers: Dict[str, base.AbstractNewsClassifier],
+    classifiers: Dict[str, Tuple[base.AbstractNewsClassifier, str]],
     testTitles: List[str],
     paramValues: dict | None,
+    dataPreprocessor: DataPreprocessingBeforeClassifiers,
 ) -> pd.DataFrame:
     """
     Returns a pd.DataFrame with the accuracies of the classifiers
@@ -42,10 +40,12 @@ def evaluateGenerator(
     Parameters
     ========
     generator: base.AbstractNewsGenerator - Fake news generator
-    clssifiers: classifiers: Dict[str, base.AbstractNewsClassifier] - A dict of classifiers to evaluate the generator with, the key is the name of the classifier
+    classifiers: Dict[str, Tuple[base.AbstractNewsClassifier, str]] - A dict of tuples to evaluate the generator with, the key is the name of the classifier.
+    The tuple contains two values - the first one is a classifier, the second one is the type of classifier ('dl' for neural network classifiers, 'ml' for everything else)
     testTitles: List[str] - A list of titles to pass to the generator
     paramValues: dict | None - A dictionary with possible generation parameters for the generator model. Can be None if generator does not have to be
     evaluated with different generation parameters
+    dataPreprocessor: DataPreprocessingBeforeClassifiers - A DataPreprocessingBeforeClassifiers object with trained/loaded tokenizers
 
     Output
     ========
@@ -70,10 +70,14 @@ def evaluateGenerator(
             classifierName: 0 for classifierName in classifiers
         }
         for testTitle in testTitles:
-            article = _preprocessArticle(generator.generate(testTitle))
+            article = generator.generate(testTitle)
             for classifierName in classifiers:
-                classification = classifiers[classifierName].predict(article)
-                if classification:
+                classification = classifiers[classifierName][0].predict(
+                    _preprocessArticle(
+                        article, dataPreprocessor, classifiers[classifierName][1]
+                    )
+                )
+                if classification[0] == 1:
                     fakeNewsCountPerClassifier[classifierName] += 1
         for classifierName in classifiers:
             res[classifierName].append(
@@ -82,11 +86,26 @@ def evaluateGenerator(
     df = pd.DataFrame(data=res).set_index([p for p in paramValues])
     return df
 
+# EXAMPLE OF USAGE
 
-df = evaluateGenerator(
-        DummyGenerator(),
-        {"dummy": DummyClassifier(metrics=[]), "dummy2": DummyClassifier(metrics=[])},
-        ["a", "b", "c"],
-        {"a": [1, 2, 3], "b": [2, 3], "c": [1, 2, 3, 5, 6, 7], "d": [2, 3]},
-    )
+# mbCl = MultinomialNaiveBayesClassifier(metrics=[])
+# mbCl.load_model("classifiers/naivebayes.pkl")
+# rdFor = RandomForestClassifierClass(metrics=[])
+# rdFor.load_model("classifiers/rf_model.pkl")
+# cnnM = ConvolutionalNeuralNetworkClassifier(metrics=[])
+# cnnM.load_model('classifiers/cnn.h5')
+# dp = DataPreprocessingBeforeClassifiers(
+#    "C:\\Users\\Kajetan\\AppData\\Roaming\\nltk_data"
+# )
+# dp.load_tokenizers(
+#    "classifiers/tokenizers/ml_tokenizer.pickle",
+#    "classifiers/tokenizers/dl_tokenizer.pickle",
+# )
+# df = evaluateGenerator(
+#    DummyGenerator(),
+#    {"mb_classifier": (mbCl, "ml"), "rf_classifier": (rdFor, "ml"), 'cnn': (cnnM, 'dl')},
+#    ["title1", "title2", "title3"],
+#    {"temp": [0, 1, 2, 3, 4]},
+#    dp,
+# )
 

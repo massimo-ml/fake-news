@@ -2,6 +2,11 @@ import numpy as np
 from tensorflow.keras.models import Sequential, load_model
 from tensorflow.keras.layers import Embedding, Dense, LSTM
 
+import sys
+sys.path.append('..')
+
+from fake_news.base import AbstractNewsClassifier
+
 
 class LSTMClassifier(AbstractNewsClassifier):
     def __init__(self, *, metrics: list[str]):

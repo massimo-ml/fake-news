@@ -2,6 +2,10 @@ import numpy as np
 from sklearn.ensemble import RandomForestClassifier
 import joblib
 
+import sys
+sys.path.append('..')
+
+from fake_news.base import AbstractNewsClassifier
 
 class RandomForestClassifierClass(AbstractNewsClassifier):
     def __init__(self, *, metrics: list[str]):
