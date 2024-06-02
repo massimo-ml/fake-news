@@ -1,9 +1,10 @@
 import numpy as np
-from sklearn.naive_bayes import MultinomialNB
-import joblib
+from sklearn.naive_bayes import MultinomialNB  # type: ignore
+import joblib  # type: ignore
 
 import sys
-sys.path.append('..')
+
+sys.path.append("..")
 
 from fake_news.base import AbstractNewsClassifier
 

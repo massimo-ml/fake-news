@@ -1,20 +1,17 @@
 import itertools
-import pandas as pd
+import pandas as pd  # type: ignore
 import numpy as np
 
-from typing import List, Dict, Tuple
+from typing import Any
 
-import base
-
-import sys
-
-sys.path.append(".")
+import fake_news.base as base
 
 from scripts.data_preprocessing import DataPreprocessingBeforeClassifiers
 
+
 def _preprocessArticle(
     article: str, preprocessor: DataPreprocessingBeforeClassifiers, type: str
-) -> np.array:
+) -> np.ndarray:
     """
     Embeds the generated article into a numpy array to make it compatible with classifiers
     """
@@ -23,14 +20,16 @@ def _preprocessArticle(
     elif type == "dl":
         return preprocessor.transform_dl(article)
     else:
-        return None
+        raise ValueError(
+            f"Invalid transform 'type'={type}. Must be one of ['ml', 'dl']"
+        )
 
 
 def evaluateGenerator(
     generator: base.AbstractNewsGenerator,
-    classifiers: Dict[str, Tuple[base.AbstractNewsClassifier, str]],
-    testTitles: List[str],
-    paramValues: dict | None,
+    classifiers: dict[str, tuple[base.AbstractNewsClassifier, str]],
+    testTitles: list[str],
+    paramValues: dict[str, Any],
     dataPreprocessor: DataPreprocessingBeforeClassifiers,
 ) -> pd.DataFrame:
     """
@@ -40,11 +39,10 @@ def evaluateGenerator(
     Parameters
     ========
     generator: base.AbstractNewsGenerator - Fake news generator
-    classifiers: Dict[str, Tuple[base.AbstractNewsClassifier, str]] - A dict of tuples to evaluate the generator with, the key is the name of the classifier.
+    classifiers: dict[str, Tuple[base.AbstractNewsClassifier, str]] - A dict of tuples to evaluate the generator with, the key is the name of the classifier.
     The tuple contains two values - the first one is a classifier, the second one is the type of classifier ('dl' for neural network classifiers, 'ml' for everything else)
-    testTitles: List[str] - A list of titles to pass to the generator
-    paramValues: dict | None - A dictionary with possible generation parameters for the generator model. Can be None if generator does not have to be
-    evaluated with different generation parameters
+    testTitles: list[str] - A list of titles to pass to the generator
+    paramValues: dict[str, Any] - A dictionary with possible generation parameters for the generator model
     dataPreprocessor: DataPreprocessingBeforeClassifiers - A DataPreprocessingBeforeClassifiers object with trained/loaded tokenizers
 
     Output
@@ -52,7 +50,7 @@ def evaluateGenerator(
     A df.DataFrame with the "accuracy" of generation (that is, the percentage of generated articles classified as fake news by each classfier)
 
     """
-    res = {
+    res: dict[str, list] = {
         colName: [] for colName in [p for p in paramValues] + [c for c in classifiers]
     }  # Params used as indices
     paramsCombinations = [
@@ -86,6 +84,7 @@ def evaluateGenerator(
     df = pd.DataFrame(data=res).set_index([p for p in paramValues])
     return df
 
+
 # EXAMPLE OF USAGE
 
 # mbCl = MultinomialNaiveBayesClassifier(metrics=[])
@@ -108,4 +107,3 @@ def evaluateGenerator(
 #    {"temp": [0, 1, 2, 3, 4]},
 #    dp,
 # )
-

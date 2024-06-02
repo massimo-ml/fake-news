@@ -18,7 +18,7 @@ class AbstractNewsClassifier(ABC):
     @abstractmethod
     def save_model(self, file_path: str) -> None:
         pass
-    
+
     @abstractmethod
     def load_model(self, file_path: str) -> None:
         pass
@@ -34,10 +34,7 @@ class AbstractNewsGenerator(ABC):
 
     def setGenerationParameter(self, paramName: str, value):
         """
-        Value can be of any type, so I'm not adding a hint 
+        Value can be of any type, so I'm not adding a hint
         """
         if paramName in self._generationParams:
             self._generationParams[paramName] = value
-    
-
-

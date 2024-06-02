@@ -1,11 +1,13 @@
 import numpy as np
-from sklearn.ensemble import RandomForestClassifier
-import joblib
+from sklearn.ensemble import RandomForestClassifier  # type: ignore
+import joblib  # type: ignore
 
 import sys
-sys.path.append('..')
+
+sys.path.append("..")
 
 from fake_news.base import AbstractNewsClassifier
+
 
 class RandomForestClassifierClass(AbstractNewsClassifier):
     def __init__(self, *, metrics: list[str]):

@@ -1,9 +1,10 @@
 import numpy as np
-from sklearn.svm import SVC
-import joblib
+from sklearn.svm import SVC  # type: ignore
+import joblib  # type: ignore
 
 import sys
-sys.path.append('..')
+
+sys.path.append("..")
 
 from fake_news.base import AbstractNewsClassifier
 
@@ -11,7 +12,7 @@ from fake_news.base import AbstractNewsClassifier
 class SupportVectorMachineClassifier(AbstractNewsClassifier):
     def __init__(self, *, metrics: list[str]):
         super().__init__(metrics=metrics)
-        self.model = SVC(kernel='linear', max_iter=1000)
+        self.model = SVC(kernel="linear", max_iter=1000)
 
     def fit(self, x: np.ndarray, y: np.ndarray):
         self.model.fit(x, y)

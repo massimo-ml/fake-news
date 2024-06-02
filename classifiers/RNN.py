@@ -1,9 +1,10 @@
 import numpy as np
-from tensorflow.keras.models import Sequential, load_model
-from tensorflow.keras.layers import Embedding, Dense, SimpleRNN
+from tensorflow.keras.models import Sequential, load_model  # type: ignore
+from tensorflow.keras.layers import Embedding, Dense, SimpleRNN  # type: ignore
 
 import sys
-sys.path.append('..')
+
+sys.path.append("..")
 
 from fake_news.base import AbstractNewsClassifier
 
@@ -14,9 +15,11 @@ class RecurrentNeuralNetworkClassifier(AbstractNewsClassifier):
         self.model = Sequential()
         self.model.add(Embedding(input_dim=10000, output_dim=128, input_length=500))
         self.model.add(SimpleRNN(128))
-        self.model.add(Dense(10, activation='relu'))
-        self.model.add(Dense(1, activation='sigmoid'))
-        self.model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+        self.model.add(Dense(10, activation="relu"))
+        self.model.add(Dense(1, activation="sigmoid"))
+        self.model.compile(
+            optimizer="adam", loss="binary_crossentropy", metrics=["accuracy"]
+        )
 
     def fit(self, x: np.ndarray, y: np.ndarray):
         self.model.fit(x, y, epochs=10, batch_size=64, validation_split=0.2)

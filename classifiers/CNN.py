@@ -1,9 +1,10 @@
 import numpy as np
-from tensorflow.keras.models import Sequential, load_model
-from tensorflow.keras.layers import Embedding, Conv1D, MaxPooling1D, Flatten, Dense
+from tensorflow.keras.models import Sequential, load_model  # type: ignore
+from tensorflow.keras.layers import Embedding, Conv1D, MaxPooling1D, Flatten, Dense  # type: ignore
 
 import sys
-sys.path.append('..')
+
+sys.path.append("..")
 
 from fake_news.base import AbstractNewsClassifier
 
@@ -13,12 +14,14 @@ class ConvolutionalNeuralNetworkClassifier(AbstractNewsClassifier):
         super().__init__(metrics=metrics)
         self.model = Sequential()
         self.model.add(Embedding(input_dim=10000, output_dim=128, input_length=500))
-        self.model.add(Conv1D(128, 5, activation='relu'))
+        self.model.add(Conv1D(128, 5, activation="relu"))
         self.model.add(MaxPooling1D(pool_size=2))
         self.model.add(Flatten())
-        self.model.add(Dense(10, activation='relu'))
-        self.model.add(Dense(1, activation='sigmoid'))
-        self.model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+        self.model.add(Dense(10, activation="relu"))
+        self.model.add(Dense(1, activation="sigmoid"))
+        self.model.compile(
+            optimizer="adam", loss="binary_crossentropy", metrics=["accuracy"]
+        )
 
     def fit(self, x: np.ndarray, y: np.ndarray):
         self.model.fit(x, y, epochs=10, batch_size=64, validation_split=0.2)
