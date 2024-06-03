@@ -48,17 +48,17 @@ class TestClassifier(unittest.TestCase):
 
     def testCNNOutputShape(self):
         model = CNN.ConvolutionalNeuralNetworkClassifier(metrics=[])
-        model.load_model("fake_news/classifiers/cnn.h5")
+        model.load_model("fake_news/classifiers/cnn.keras")
         self._singleClassifierTest(model, self.mockInputDl)
 
     def testLSTMOutputShape(self):
         model = LSTM.LSTMClassifier(metrics=[])
-        model.load_model("fake_news/classifiers/lstm_model.h5")
+        model.load_model("fake_news/classifiers/lstm_model.keras")
         self._singleClassifierTest(model, self.mockInputDl)
 
     def testRNNOutputShape(self):
         model = RNN.RecurrentNeuralNetworkClassifier(metrics=[])
-        model.load_model("fake_news/classifiers/rnn.h5")
+        model.load_model("fake_news/classifiers/rnn.keras")
         self._singleClassifierTest(model, self.mockInputDl)
 
 
