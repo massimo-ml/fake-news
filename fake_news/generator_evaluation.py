@@ -30,7 +30,7 @@ def evaluateGenerator(
     generator: base.AbstractNewsGenerator,
     classifiers: dict[str, tuple[base.AbstractNewsClassifier, str]],
     testTitles: list[str],
-    paramValues: dict[str, Any],
+    paramValues: dict[str, list[Any]],
     dataPreprocessor: DataPreprocessingBeforeClassifiers,
 ) -> pd.DataFrame:
     """
@@ -71,16 +71,15 @@ def evaluateGenerator(
     ]  # Generate all possible generation parameters combinations
 
     for paramCombination in paramsCombinations:
-        for paramName in paramCombination:
-            generator.setGenerationParameter(
-                paramName=paramName, value=paramCombination[paramName]
-            )
-            res[paramName].append(paramCombination[paramName])
+        for paramName, paramVal in paramCombination.items():
+            res[paramName].append(paramVal)
         fakeNewsCountPerClassifier = {
             classifierName: 0 for classifierName in classifiers
         }
-        for testTitle in testTitles:
-            article = generator.generate(testTitle)
+        for testTitle in testTitles:  # TODO: perhaps use batch
+            article = generator.generate(
+                [testTitle], generation_config=paramCombination
+            )[0]
             for classifierName in classifiers:
                 classification = classifiers[classifierName][0].predict(
                     _preprocessArticle(
