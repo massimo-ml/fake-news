@@ -7,5 +7,6 @@ nltk
 tensorflow
 transformers
 sentencepiece
+peft
 --index-url https://download.pytorch.org/whl/cu118
 torch

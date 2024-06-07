@@ -30,7 +30,7 @@ class AbstractNewsGenerator(ABC):
     @abstractmethod
     def generate(
         self,
-        title: str,
+        title: list[str],
         generation_config: GenerationConfig | dict[str, Any] | None = None,
-    ) -> str:
+    ) -> list[str]:
         pass

@@ -1,6 +1,6 @@
 from transformers import (  # type: ignore
-    T5Tokenizer,
-    T5ForConditionalGeneration,
+    LlamaForCausalLM,
+    LlamaTokenizer,
     GenerationConfig,
 )
 
@@ -9,16 +9,21 @@ from typing import Any
 from fake_news.base import AbstractNewsGenerator
 
 
-class T5Generator(AbstractNewsGenerator):
+class TinyLlamaGenerator(AbstractNewsGenerator):
     def __init__(
         self,
-        model_path: str = "AmevinLS/flan-t5-base-realnews",
+        model_path: str = "AmevinLS/TinyLLama-lora-realnews",
         device_map: str = "auto",
     ):
-        self.model = T5ForConditionalGeneration.from_pretrained(
+        self.model: LlamaForCausalLM = LlamaForCausalLM.from_pretrained(
             model_path, device_map=device_map
+        )  # NOTE: you must have 'peft' installed to load adapter models
+        self.tokenizer: LlamaTokenizer = LlamaTokenizer.from_pretrained(
+            model_path
         )
-        self.tokenizer: T5Tokenizer = T5Tokenizer.from_pretrained(model_path)
+        self.tokenizer.pad_token = self.tokenizer.eos_token
+        self._prefix = "### Title:"
+        self._response_template = "\n### Article: "
 
     def generate(
         self,
@@ -42,17 +47,26 @@ class T5Generator(AbstractNewsGenerator):
             input_tokens, generation_config=generation_config
         )
 
-        return self.tokenizer.batch_decode(
+        model_outputs = self.tokenizer.batch_decode(
             output_tokens, skip_special_tokens=True
         )
 
+        return [
+            self._extract_article(model_output)
+            for model_output in model_outputs
+        ]
+
     def _format_prompt(self, title: str):
-        PREFIX = "Please write an article based on the title: "
-        return PREFIX + title
+        return f"{self._prefix} {title}. {self._response_template}"
+
+    def _extract_article(self, model_output: str):
+        return model_output.split(self._response_template)[-1]
 
 
 if __name__ == "__main__":
-    generator = T5Generator()
+    # import torch
+    # print(torch.cuda.is_available())
+    generator = TinyLlamaGenerator()
     output = generator.generate(
         ["Belarus under new set of sanctions"],
         {
