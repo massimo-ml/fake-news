@@ -8,5 +8,4 @@ tensorflow
 transformers
 sentencepiece
 peft
---index-url https://download.pytorch.org/whl/cu118
-torch
+torch --index-url https://download.pytorch.org/whl/cu118
