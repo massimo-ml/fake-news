@@ -60,8 +60,9 @@ def evaluateGenerator(
 
     """
     res: dict[str, list] = {
-        colName: []
-        for colName in [p for p in paramValues] + [c for c in classifiers]
+        colName: [] for colName in
+        [p for p in paramValues] +
+        [c for c in classifiers]
     }  # Params used as indices
     paramsCombinations = [
         {paramName: comb[i] for i, paramName in enumerate(paramValues)}
@@ -76,8 +77,11 @@ def evaluateGenerator(
         fakeNewsCountPerClassifier = {
             classifierName: 0 for classifierName in classifiers
         }
-        articles = generator.generate(testTitles, generation_config=paramCombination)
-        for article in articles:  # TODO: perhaps use batch
+        articles = generator.generate(
+            testTitles,
+            generation_config=paramCombination
+        )
+        for article in articles:
             for classifierName in classifiers:
                 classification = classifiers[classifierName][0].predict(
                     _preprocessArticle(
