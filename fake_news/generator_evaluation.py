@@ -76,10 +76,8 @@ def evaluateGenerator(
         fakeNewsCountPerClassifier = {
             classifierName: 0 for classifierName in classifiers
         }
-        for testTitle in testTitles:  # TODO: perhaps use batch
-            article = generator.generate(
-                [testTitle], generation_config=paramCombination
-            )[0]
+        articles = generator.generate(testTitles, generation_config=paramCombination)
+        for article in articles:  # TODO: perhaps use batch
             for classifierName in classifiers:
                 classification = classifiers[classifierName][0].predict(
                     _preprocessArticle(
