@@ -25,7 +25,7 @@ class LSTMClassifier(AbstractNewsClassifier):
     def predict(self, x: np.ndarray) -> np.ndarray:
         y_pred = self.model.predict(x)
         y_pred = (y_pred > 0.5).astype(int)
-        return y_pred
+        return y_pred[0]
 
     def save_model(self, file_path: str):
         self.model.save(file_path)

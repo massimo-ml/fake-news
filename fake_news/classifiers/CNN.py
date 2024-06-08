@@ -15,9 +15,8 @@ class ConvolutionalNeuralNetworkClassifier(AbstractNewsClassifier):
     def __init__(self, *, metrics: list[str]):
         super().__init__(metrics=metrics)
         self.model = Sequential()
-        self.model.add(
-            Embedding(input_dim=10000, output_dim=128, input_length=500)
-        )
+        self.model.add(Embedding(input_dim=10000, output_dim=128,
+                                 input_length=500))
         self.model.add(Conv1D(128, 5, activation="relu"))
         self.model.add(MaxPooling1D(pool_size=2))
         self.model.add(Flatten())
@@ -33,7 +32,9 @@ class ConvolutionalNeuralNetworkClassifier(AbstractNewsClassifier):
     def predict(self, x: np.ndarray) -> np.ndarray:
         y_pred = self.model.predict(x)
         y_pred = (y_pred > 0.5).astype(int)
-        return y_pred
+        return y_pred[0]
+        # Return only 1st dim to make it
+        # compatible with other classifiers
 
     def save_model(self, file_path: str):
         self.model.save(file_path)
