@@ -6,8 +6,10 @@ from transformers import GenerationConfig  # type: ignore
 
 
 class AbstractNewsClassifier(ABC):
-    def __init__(self, *, metrics: list[str]):
-        self._metrics: list[str] = metrics
+    def __init__(self, *, metrics: list[str] | None = None):
+        self._metrics: list[str] | None = (
+            metrics  # TODO: This attribute is never used??
+        )
 
     @abstractmethod
     def fit(self, x: np.ndarray, y: np.ndarray):
@@ -30,7 +32,7 @@ class AbstractNewsGenerator(ABC):
     @abstractmethod
     def generate(
         self,
-        title: list[str],
+        titles: list[str],
         generation_config: GenerationConfig | dict[str, Any] | None = None,
     ) -> list[str]:
         pass

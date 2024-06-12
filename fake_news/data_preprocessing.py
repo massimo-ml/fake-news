@@ -14,17 +14,18 @@ from tensorflow.keras.preprocessing.sequence import (  # type: ignore
 
 
 class DataPreprocessingBeforeClassifiers:
-    def __init__(self, nltk_data_path: str) -> None:
+    def __init__(self, nltk_data_path: str | None = None) -> None:
         self.dl_seq_maxlen = 500
         self.stop_words = set(stopwords.words("english"))
         self.lemmatizer = WordNetLemmatizer()
         self.ml_vectorizer: TfidfVectorizer | None = None
         self.dl_vectorizer: Tokenizer | None = None
-        nltk.data.path.append(nltk_data_path)
+        if nltk_data_path is not None:
+            nltk.data.path.append(nltk_data_path)
 
-    def fit_tokenizers(self, df_train_path: str, df_test_path: str):
-        self.df_train = pd.read_csv(df_train_path)
-        self.df_test = pd.read_csv(df_test_path)
+    def fit_tokenizers_df(self, df_train: pd.DataFrame, df_test: pd.DataFrame):
+        self.df_train = df_train.copy()
+        self.df_test = df_test.copy()
 
         self.df_train["title"] = self.df_train["title"].apply(self.clean_text)
         self.df_train["text"] = self.df_train["text"].apply(self.clean_text)
@@ -83,6 +84,11 @@ class DataPreprocessingBeforeClassifiers:
 
         self.dl_vectorizer = Tokenizer(num_words=10000)
         self.dl_vectorizer.fit_on_texts(self.X_train)
+
+    def fit_tokenizers(self, df_train_path: str, df_test_path: str):
+        return self.fit_tokenizers_df(
+            pd.read_csv(df_train_path), pd.read_csv(df_test_path)
+        )
 
     def save_tokenizers(
         self, ml_vectorizer_path: str, dl_vectorizer_path: str
