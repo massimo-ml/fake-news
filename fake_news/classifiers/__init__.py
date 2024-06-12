@@ -2,7 +2,7 @@ __all__ = [
     "ConvolutionalNeuralNetworkClassifier",
     "LSTMClassifier",
     "MultinomialNaiveBayesClassifier",
-    "RandomForestClassifier",
+    "RandomForestClassifierClass",
     "RecurrentNeuralNetworkClassifier",
     "SupportVectorMachineClassifier",
     "LogisticRegressionNewsClassifier",
@@ -11,7 +11,7 @@ __all__ = [
 from .CNN import ConvolutionalNeuralNetworkClassifier
 from .LSTM import LSTMClassifier
 from .NaiveBayes import MultinomialNaiveBayesClassifier
-from .RandomForest import RandomForestClassifier
+from .RandomForest import RandomForestClassifierClass
 from .RNN import RecurrentNeuralNetworkClassifier
 from .SVM import SupportVectorMachineClassifier
 from .logisticRegression import LogisticRegressionNewsClassifier
