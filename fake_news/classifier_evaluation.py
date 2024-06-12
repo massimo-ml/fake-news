@@ -25,6 +25,10 @@ def _fit_classifier(
     x: scipy.sparse.spmatrix | np.ndarray
     x = stack_func([preprocess_func(article) for article in input_df["text"]])
     y = input_df["label"].values
+
+    if clf_type == "dl":
+        x = x[:, 0]
+
     classifier.fit(x, y)
 
 
@@ -44,6 +48,9 @@ def _predict_classifier(
     x: np.ndarray = stack_func(
         [preprocess_func(article) for article in input_df["text"]]
     )
+
+    if clf_type == "dl":
+        x = x[:, 0]
 
     return classifier.predict(x)
 
