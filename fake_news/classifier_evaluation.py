@@ -57,6 +57,7 @@ def evaluate_classifiers(
     orig_tokenizer_paths: tuple[str, str],
     combined_tokenizer_paths: tuple[str, str],
     nltk_data_path: str | None = None,
+    orig_classifier_paths: list[str] | None = None,
 ):
     orig_preprocessor = DataPreprocessingBeforeClassifiers(nltk_data_path)
     combined_preprocessor = DataPreprocessingBeforeClassifiers(nltk_data_path)
@@ -64,18 +65,21 @@ def evaluate_classifiers(
     logging.info("Loading tokenizers")
     orig_preprocessor.load_tokenizers(*orig_tokenizer_paths)
     combined_preprocessor.load_tokenizers(*combined_tokenizer_paths)
-    # orig_preprocessor.fit_tokenizers_df(train_df, test_df)
-    # combined_preprocessor.fit_tokenizers_df(train_df, test_df)
 
     metrics_results = []
 
-    for classifier_cls, clf_type in classifiers:
+    for i, (classifier_cls, clf_type) in enumerate(classifiers):
         logging.info(f"Started evaluating {classifier_cls}")
 
         # Train classifier without synthetic
         logging.info("Fitting and predicting on original data")
         orig_classifier = classifier_cls()
-        _fit_classifier(orig_classifier, clf_type, orig_preprocessor, train_df)
+        if orig_classifier_paths is None:
+            _fit_classifier(
+                orig_classifier, clf_type, orig_preprocessor, train_df
+            )
+        else:
+            orig_classifier.load_model(orig_classifier_paths[i])
         # Predict
         orig_pred = _predict_classifier(
             orig_classifier, clf_type, orig_preprocessor, test_df
