@@ -27,14 +27,12 @@ We performed the following steps in our experiment:
     - `classifiers.ipynb` - contains code for training the first set of classifiers (i.e. the ones that do not use the synthetic data)
     - `data_preparation.ipynb` - contains different statisics of the data
     - `generators_evaluation.ipynb` - contains evaluation of all of the generators
+    - `synthetic_generation.ipynb` - contains code used to generate synthetic data
+    - `classifier_evaluation.ipynb` - contains code for training classifiers with the addition of synthetic data
 - scripts - contains different scripts to transform the data
     - `data_prep.py` - contains code for data cleaning and preparation
 - test - contains unit tests
-
-# Summary of the results
-
-TODO
-
+  
 # Development
 
 ## Dataset
