@@ -29,6 +29,7 @@ We performed the following steps in our experiment:
     - `generators_evaluation.ipynb` - contains evaluation of all of the generators
     - `synthetic_generation.ipynb` - contains code used to generate synthetic data
     - `classifier_evaluation.ipynb` - contains code for training classifiers with the addition of synthetic data
+    - `results.ipynb` - contains the results from all of the above notebooks
 - scripts - contains different scripts to transform the data
     - `data_prep.py` - contains code for data cleaning and preparation
 - test - contains unit tests
