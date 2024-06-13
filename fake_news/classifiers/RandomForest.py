@@ -6,7 +6,7 @@ from fake_news.base import AbstractNewsClassifier
 
 
 class RandomForestClassifierClass(AbstractNewsClassifier):
-    def __init__(self, *, metrics: list[str]):
+    def __init__(self, *, metrics: list[str] | None = None):
         super().__init__(metrics=metrics)
         self.model = RandomForestClassifier(n_estimators=100, random_state=44)
 

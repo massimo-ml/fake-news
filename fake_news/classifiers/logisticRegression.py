@@ -6,7 +6,7 @@ from fake_news.base import AbstractNewsClassifier
 
 
 class LogisticRegressionNewsClassifier(AbstractNewsClassifier):
-    def __init__(self, *, metrics: list[str]):
+    def __init__(self, *, metrics: list[str] | None = None):
         super().__init__(metrics=metrics)
         self.model = LogisticRegression(max_iter=1000)
 

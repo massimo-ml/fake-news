@@ -12,11 +12,12 @@ from fake_news.base import AbstractNewsClassifier
 
 
 class ConvolutionalNeuralNetworkClassifier(AbstractNewsClassifier):
-    def __init__(self, *, metrics: list[str]):
+    def __init__(self, *, metrics: list[str] | None = None):
         super().__init__(metrics=metrics)
         self.model = Sequential()
-        self.model.add(Embedding(input_dim=10000, output_dim=128,
-                                 input_length=500))
+        self.model.add(
+            Embedding(input_dim=10000, output_dim=128, input_length=500)
+        )
         self.model.add(Conv1D(128, 5, activation="relu"))
         self.model.add(MaxPooling1D(pool_size=2))
         self.model.add(Flatten())
